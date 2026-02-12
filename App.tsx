@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import TrustStrip from './components/TrustStrip';
@@ -13,6 +13,14 @@ declare const gsap: any;
 declare const ScrollTrigger: any;
 
 const App: React.FC = () => {
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('theme') === 'dark' || 
+        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+    return false;
+  });
+
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
@@ -35,7 +43,7 @@ const App: React.FC = () => {
       );
     });
 
-    // Custom Cursor logic - Disable on mobile
+    // Custom Cursor logic
     if (window.innerWidth > 1024) {
       const cursor = document.createElement('div');
       cursor.className = 'cursor-follower';
@@ -59,11 +67,23 @@ const App: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDarkMode]);
+
+  const toggleTheme = () => setIsDarkMode(!isDarkMode);
+
   return (
-    <div className="flex flex-col min-h-screen selection:bg-[#16D12E] selection:text-white">
-      <Navbar />
+    <div className="flex flex-col min-h-screen selection:bg-[#16D12E] selection:text-white dark:bg-[#050505] transition-colors duration-500">
+      <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
       <main className="flex-grow">
-        <Hero />
+        <Hero isDarkMode={isDarkMode} />
         <TrustStrip />
         <ValueProp />
         <Framework />
@@ -71,18 +91,18 @@ const App: React.FC = () => {
         <PortfolioStructure />
         
         {/* Closing Section Refined */}
-        <section className="py-24 lg:py-40 bg-white border-t border-[#e9eaeb]">
+        <section className="py-24 lg:py-40 bg-white dark:bg-[#050505] border-t border-[#e9eaeb] dark:border-[#1a1a1a]">
           <div className="max-w-[1440px] mx-auto px-6">
-            <div className="bg-[#fafafa] border border-[#e9eaeb] p-10 lg:p-20 text-center relative group overflow-hidden transition-all duration-700 hover:bg-[#111111] hover:shadow-2xl">
+            <div className="bg-[#fafafa] dark:bg-[#0d0d0d] border border-[#e9eaeb] dark:border-[#1a1a1a] p-10 lg:p-20 text-center relative group overflow-hidden transition-all duration-700 hover:bg-[#111111] dark:hover:bg-white hover:shadow-2xl">
               <div className="absolute top-0 left-0 w-full h-2 bg-[#16D12E] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700"></div>
               
-              <h2 className="text-4xl md:text-7xl font-medium mb-8 lg:mb-10 heading-h2 group-hover:text-white transition-colors duration-500">
+              <h2 className="text-4xl md:text-7xl font-medium mb-8 lg:mb-10 heading-h2 group-hover:text-white dark:group-hover:text-black transition-colors duration-500">
                 Capital, <span className="text-[#16D12E]">Thoughtfully</span> Managed.
               </h2>
-              <p className="text-gray-400 text-lg md:text-2xl mb-12 lg:mb-16 max-w-2xl mx-auto font-light leading-relaxed group-hover:text-gray-300 transition-colors duration-500">
+              <p className="text-gray-400 text-lg md:text-2xl mb-12 lg:mb-16 max-w-2xl mx-auto font-light leading-relaxed group-hover:text-gray-300 dark:group-hover:text-gray-600 transition-colors duration-500">
                 Bespoke strategies designed for the complexities of modern wealth creation and preservation.
               </p>
-              <button className="bg-[#111111] text-white w-full sm:w-auto px-12 py-6 text-xs font-bold tracking-[0.3em] uppercase transition-all transform hover:bg-[#16D12E] hover:text-black hover:scale-[1.05] active:scale-[0.98] group-hover:bg-white group-hover:text-black">
+              <button className="bg-[#111111] dark:bg-white text-white dark:text-black w-full sm:w-auto px-12 py-6 text-xs font-bold tracking-[0.3em] uppercase transition-all transform hover:bg-[#16D12E] dark:hover:bg-[#16D12E] hover:text-black hover:scale-[1.05] active:scale-[0.98]">
                 Start a Conversation
               </button>
             </div>
