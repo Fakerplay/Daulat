@@ -6,6 +6,7 @@ import TrustStrip from './components/TrustStrip';
 import MarketTicker from './components/MarketTicker';
 import ValueProp from './components/ValueProp';
 import Framework from './components/Framework';
+import CompoundingVisual from './components/CompoundingVisual';
 import Leadership from './components/Leadership';
 import PortfolioStructure from './components/PortfolioStructure';
 import Footer from './components/Footer';
@@ -87,6 +88,7 @@ const App: React.FC = () => {
         <TrustStrip />
         <ValueProp />
         <Framework />
+        <CompoundingVisual isDarkMode={isDarkMode} />
         <Leadership />
         <PortfolioStructure />
         
