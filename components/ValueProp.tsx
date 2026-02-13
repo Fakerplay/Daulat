@@ -1,8 +1,55 @@
 
 import React, { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 
 declare const gsap: any;
 declare const ScrollTrigger: any;
+
+const FintechVisual = ({ id }: { id: string }) => {
+  if (id === "01") {
+    // connectivity graph for Research
+    return (
+      <svg className="w-full h-12 mb-8 opacity-40 dark:opacity-60" viewBox="0 0 100 40">
+        <circle cx="20" cy="20" r="2" fill="currentColor" />
+        <circle cx="50" cy="10" r="2" fill="currentColor" />
+        <circle cx="80" cy="20" r="2" fill="currentColor" />
+        <circle cx="50" cy="30" r="2" fill="currentColor" />
+        <path d="M20 20 L50 10 L80 20 L50 30 Z" stroke="currentColor" fill="none" strokeWidth="0.5" strokeDasharray="2 2" />
+        <motion.circle 
+          animate={{ r: [1, 3, 1] }} 
+          transition={{ repeat: Infinity, duration: 2 }}
+          cx="50" cy="20" r="1.5" fill="#16D12E" 
+        />
+      </svg>
+    );
+  }
+  if (id === "02") {
+    // Stability curve for Risk
+    return (
+      <svg className="w-full h-12 mb-8 opacity-40 dark:opacity-60" viewBox="0 0 100 40">
+        <path d="M0 35 Q 25 35, 50 5 Q 75 35, 100 35" stroke="currentColor" fill="none" strokeWidth="1" />
+        <motion.path 
+          animate={{ d: ["M0 35 Q 25 35, 50 20 Q 75 35, 100 35", "M0 35 Q 25 35, 50 5 Q 75 35, 100 35"] }}
+          transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+          d="M0 35 Q 25 35, 50 5 Q 75 35, 100 35" stroke="#16D12E" fill="none" strokeWidth="0.5" 
+        />
+      </svg>
+    );
+  }
+  return (
+    // Distribution node for Allocation
+    <svg className="w-full h-12 mb-8 opacity-40 dark:opacity-60" viewBox="0 0 100 40">
+      {[10, 30, 50, 70, 90].map((x, i) => (
+        <motion.rect 
+          key={i}
+          animate={{ height: [10, 30, 15, 25][i % 4] || 20 }}
+          transition={{ repeat: Infinity, duration: 3, delay: i * 0.2 }}
+          x={x} y="10" width="4" height="20" fill={i === 2 ? "#16D12E" : "currentColor"} 
+        />
+      ))}
+    </svg>
+  );
+};
 
 const ValueProp: React.FC = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -13,10 +60,7 @@ const ValueProp: React.FC = () => {
     if (!cards) return;
 
     gsap.fromTo(cards, 
-      { 
-        opacity: 0, 
-        y: 40,
-      },
+      { opacity: 0, y: 40 },
       {
         opacity: 1,
         y: 0,
@@ -91,6 +135,9 @@ const ValueProp: React.FC = () => {
               </div>
               
               <div className="flex-grow">
+                {/* Visual Connector Component */}
+                <FintechVisual id={theme.id} />
+                
                 <h3 className="text-3xl lg:text-4xl font-medium mb-6 lg:mb-10 text-[#111111] dark:text-white group-hover:text-white dark:group-hover:text-black transition-colors duration-500 leading-tight">
                   {theme.title}
                 </h3>

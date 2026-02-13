@@ -1,6 +1,7 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CapitalArchitecture from './CapitalArchitecture';
+import { motion } from 'framer-motion';
 
 declare const gsap: any;
 
@@ -13,10 +14,17 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<HTMLDivElement>(null);
+  const [val, setVal] = useState(128452.42);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVal(v => v + (Math.random() - 0.45) * 10);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Split text animation for H1
       const title = titleRef.current;
       if (title) {
         const text = title.innerText;
@@ -33,13 +41,11 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
         });
       }
 
-      // Fade in subtitle and actions
       gsap.fromTo([subtitleRef.current, actionsRef.current], 
         { opacity: 0, y: 30 },
         { opacity: 1, y: 0, duration: 1.2, stagger: 0.2, ease: "power3.out", delay: 0.9 }
       );
 
-      // Parallax for the visual on desktop
       if (window.innerWidth > 1024) {
         gsap.to('.hero-visual-wrapper', {
           y: -80,
@@ -59,13 +65,11 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
 
   return (
     <section ref={containerRef} className="relative bg-white dark:bg-[#050505] pt-16 pb-24 lg:pt-32 lg:pb-60 overflow-hidden transition-colors duration-500">
-      {/* Editorial Grid Overlay */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.02] dark:opacity-[0.05] hidden sm:block">
-        <div className="max-w-[1440px] mx-auto h-full grid grid-cols-6 lg:grid-cols-12 px-6 lg:px-10">
-          {[...Array(13)].map((_, i) => (
-            <div key={i} className="border-l border-black dark:border-white h-full"></div>
-          ))}
-        </div>
+      {/* Structural Data Layer */}
+      <div className="absolute top-0 right-0 p-10 hidden xl:flex flex-col items-end gap-2 opacity-10 dark:opacity-20 pointer-events-none">
+        <span className="text-[10px] font-mono tracking-widest uppercase">LATENCY: 14MS</span>
+        <span className="text-[10px] font-mono tracking-widest uppercase">NODE_ACTIVE: ASIA_PACIFIC</span>
+        <span className="text-[10px] font-mono tracking-widest uppercase">ENCRYPTION: AES_256_GCM</span>
       </div>
 
       <div className="max-w-[1440px] mx-auto px-6 lg:px-10 grid lg:grid-cols-12 gap-16 lg:gap-24 items-start relative z-10">
@@ -74,7 +78,10 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
         <div className="lg:col-span-7 flex flex-col items-start pt-6 lg:pt-10">
           <div className="flex items-center gap-5 mb-10 lg:mb-14">
             <div className="w-12 h-[2.5px] bg-[#16D12E]"></div>
-            <span className="text-[10px] font-bold tracking-[0.6em] uppercase text-[#16D12E]">Institutional Rigor</span>
+            <div className="flex flex-col">
+              <span className="text-[10px] font-bold tracking-[0.6em] uppercase text-[#16D12E]">Institutional Rigor</span>
+              <span className="text-[8px] font-mono text-gray-300 uppercase mt-1">Status: Market_Open</span>
+            </div>
           </div>
           
           <h1 
@@ -84,7 +91,10 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
             Compounding with Depth.
           </h1>
           
-          <div ref={subtitleRef} className="max-w-xl border-l border-[#f0f0f0] dark:border-[#1a1a1a] pl-6 lg:pl-12 mb-12 lg:mb-20">
+          <div ref={subtitleRef} className="max-w-xl border-l border-[#f0f0f0] dark:border-[#1a1a1a] pl-6 lg:pl-12 mb-12 lg:mb-20 relative">
+            {/* Fintech Visual Decorator */}
+            <div className="absolute -left-[1px] top-0 h-1/3 w-[3px] bg-[#16D12E]"></div>
+            
             <p className="text-xl lg:text-3xl text-gray-400 dark:text-gray-500 leading-relaxed font-light">
               Bespoke investment strategies designed for <span className="text-[#111111] dark:text-white font-normal">long-term risk-adjusted growth</span> across public and private markets.
             </p>
@@ -109,6 +119,32 @@ const Hero: React.FC<HeroProps> = ({ isDarkMode }) => {
           <div className="relative">
             <div className="aspect-square sm:aspect-[4/5] bg-white dark:bg-[#050505] border border-[#e9eaeb] dark:border-[#1a1a1a] p-1 shadow-[0_80px_160px_-40px_rgba(0,0,0,0.12)] relative overflow-hidden group">
               <CapitalArchitecture isDarkMode={isDarkMode} />
+              
+              {/* Floating Fintech Widget */}
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 1.5, duration: 1 }}
+                className="absolute top-10 right-10 bg-white/80 dark:bg-black/80 backdrop-blur-md p-6 border border-[#e9eaeb] dark:border-[#1a1a1a] hidden sm:block shadow-xl z-20"
+              >
+                <div className="flex items-center justify-between mb-4 gap-12">
+                  <span className="text-[8px] font-bold tracking-widest text-gray-400 uppercase">Live_Portfolio_Value</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#16D12E] animate-ping"></div>
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-xs font-light text-gray-400">$</span>
+                  <span className="text-xl font-bold tracking-tighter text-[#111111] dark:text-white font-mono">
+                    {val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                </div>
+                <div className="mt-4 h-1 w-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                  <motion.div 
+                    animate={{ width: ["10%", "60%", "45%", "80%"] }}
+                    transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
+                    className="h-full bg-[#16D12E]"
+                  />
+                </div>
+              </motion.div>
             </div>
             
             {/* Real-time Data Float (Desktop only) */}

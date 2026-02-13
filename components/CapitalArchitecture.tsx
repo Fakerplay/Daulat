@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface Props {
   isDarkMode?: boolean;
@@ -8,6 +8,15 @@ interface Props {
 const CapitalArchitecture: React.FC<Props> = ({ isDarkMode = false }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: -1000, y: -1000 });
+  const [logs, setLogs] = useState<string[]>(["BOOT_SEQUENCE_COMPLETE", "CONNECTION_ESTABLISHED", "ALPHA_ENGINE_IDLE"]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const msgs = ["FETCHING_MARKET_DATA", "COMPUTING_RISK_PARITY", "ORDER_ROUTING_ACTIVE", "HEDGING_INDEX_VOL", "EXECUTION_COMPLETE", "ANALYZING_LIQUIDITY"];
+      setLogs(prev => [msgs[Math.floor(Math.random() * msgs.length)], ...prev].slice(0, 5));
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -24,7 +33,6 @@ const CapitalArchitecture: React.FC<Props> = ({ isDarkMode = false }) => {
     const nodes: any[] = [];
     const alphaAccentColor = '#16D12E';
     
-    // Dynamic Colors
     const getBaseTextColor = () => isDarkMode ? '#ffffff' : '#111111';
     const getGridColor = () => isDarkMode ? '#111111' : '#f5f5f5';
     const getDotColor = () => isDarkMode ? '#444444' : '#d1d1d1';
@@ -148,10 +156,8 @@ const CapitalArchitecture: React.FC<Props> = ({ isDarkMode = false }) => {
 
     const animate = () => {
       ctx.clearRect(0, 0, width, height);
-
       const innerW = width / 2;
       const innerH = height / 2;
-
       const p0 = { x: innerW * 0.1, y: innerH * 0.85 };
       const p1 = { x: innerW * 0.45, y: innerH * 0.75 };
       const p2 = { x: innerW * 0.9, y: innerH * 0.15 };
@@ -184,7 +190,6 @@ const CapitalArchitecture: React.FC<Props> = ({ isDarkMode = false }) => {
       nodes.forEach(node => {
         node.update();
         node.draw();
-        
         const dx = mouseRef.current.x - node.x;
         const dy = mouseRef.current.y - node.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -237,9 +242,25 @@ const CapitalArchitecture: React.FC<Props> = ({ isDarkMode = false }) => {
   }, [isDarkMode]);
 
   return (
-    <div className="w-full h-full relative overflow-hidden bg-white dark:bg-[#050505] cursor-none transition-colors duration-500">
+    <div className="w-full h-full relative overflow-hidden bg-white dark:bg-[#050505] transition-colors duration-500">
       <canvas ref={canvasRef} className="w-full h-full block" />
       <div className="absolute inset-0 pointer-events-none border border-[#e9eaeb] dark:border-[#1a1a1a] bg-gradient-to-tr from-black/[0.02] dark:from-white/[0.02] to-transparent"></div>
+      
+      {/* Fintech Sidebar */}
+      <div className="absolute left-6 top-24 flex flex-col gap-4 pointer-events-none hidden sm:flex">
+        <div className="flex flex-col gap-1">
+          <span className="text-[6px] font-mono text-gray-300 uppercase tracking-tighter">System_Logs</span>
+          <div className="flex flex-col gap-1.5 mt-1">
+            {logs.map((log, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <div className="w-1 h-1 rounded-full bg-[#16D12E]"></div>
+                <span className="text-[7px] font-mono text-[#111111] dark:text-white opacity-40 uppercase tracking-tighter">{log}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <div className="absolute top-8 left-8 flex flex-col items-start gap-1">
         <div className="w-10 h-[1px] bg-[#111111] dark:bg-white"></div>
         <span className="text-[7px] font-bold tracking-[0.5em] uppercase text-gray-300 dark:text-gray-600">Strategy Matrix V2.0</span>
