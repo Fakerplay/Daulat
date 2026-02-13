@@ -1,8 +1,57 @@
 
 import React, { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 
 declare const gsap: any;
 declare const ScrollTrigger: any;
+
+const ProcessDiagram = ({ step }: { step: string }) => {
+  if (step === "01") {
+    return (
+      <svg className="w-full h-24 mb-10 text-gray-100 dark:text-gray-800" viewBox="0 0 200 80">
+        <rect x="10" y="10" width="40" height="60" rx="4" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="4 4" />
+        <rect x="80" y="10" width="40" height="60" rx="4" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="4 4" />
+        <rect x="150" y="10" width="40" height="60" rx="4" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="4 4" />
+        <motion.path 
+          animate={{ x: [0, 70, 140, 0] }}
+          transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
+          d="M 30 40 L 40 40" stroke="#16D12E" strokeWidth="2" strokeLinecap="round" 
+        />
+        <text x="10" y="6" fontSize="5" className="fill-gray-400 dark:fill-gray-600 font-mono">SCAN_NODE_01</text>
+        <text x="80" y="6" fontSize="5" className="fill-gray-400 dark:fill-gray-600 font-mono">FILTER_NODE_02</text>
+        <text x="150" y="6" fontSize="5" className="fill-gray-400 dark:fill-gray-600 font-mono">EXEC_NODE_03</text>
+      </svg>
+    );
+  }
+  if (step === "02") {
+    return (
+      <svg className="w-full h-24 mb-10 text-gray-100 dark:text-gray-800" viewBox="0 0 200 80">
+        <circle cx="100" cy="40" r="30" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="2 2" />
+        <motion.path 
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
+          style={{ originX: "100px", originY: "40px" }}
+          d="M 100 10 L 100 40 L 130 40" stroke="#16D12E" strokeWidth="1" fill="none" 
+        />
+        <text x="100" y="80" textAnchor="middle" fontSize="6" className="fill-gray-400 dark:fill-gray-600 font-mono">DYNAMIC_ALLOCATION_MATRIX</text>
+      </svg>
+    );
+  }
+  return (
+    <svg className="w-full h-24 mb-10 text-gray-100 dark:text-gray-800" viewBox="0 0 200 80">
+      <path d="M 10 40 L 190 40" stroke="currentColor" strokeWidth="0.5" strokeDasharray="1 5" />
+      {[20, 50, 80, 110, 140, 170].map((x, i) => (
+        <motion.circle 
+          key={i}
+          animate={{ r: [1, 2, 1], opacity: [0.3, 1, 0.3] }}
+          transition={{ repeat: Infinity, duration: 2, delay: i * 0.3 }}
+          cx={x} cy="40" r="1.5" fill="#16D12E" 
+        />
+      ))}
+      <text x="100" y="15" textAnchor="middle" fontSize="6" className="fill-gray-400 dark:fill-gray-600 font-mono">SURVEILLANCE_BEAT_ACTIVE</text>
+    </svg>
+  );
+};
 
 const Framework: React.FC = () => {
   const gridRef = useRef<HTMLDivElement>(null);
@@ -67,6 +116,8 @@ const Framework: React.FC = () => {
             <div key={step.id} className="framework-card p-10 lg:p-16 group hover:bg-[#111111] dark:hover:bg-white transition-all duration-500 relative overflow-hidden cursor-default">
               <div className="absolute top-0 left-0 w-full h-1.5 bg-[#16D12E] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
               
+              <ProcessDiagram step={step.id} />
+
               <span className="block text-4xl lg:text-5xl font-light text-gray-100 dark:text-gray-800 mb-8 group-hover:text-[#16D12E] transition-colors duration-500 number-tracking">
                 {step.id}
               </span>

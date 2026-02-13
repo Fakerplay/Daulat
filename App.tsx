@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import TrustStrip from './components/TrustStrip';
+import MarketTicker from './components/MarketTicker';
 import ValueProp from './components/ValueProp';
 import Framework from './components/Framework';
 import Leadership from './components/Leadership';
@@ -24,7 +25,6 @@ const App: React.FC = () => {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Global reveal for sections
     const sections = document.querySelectorAll('section');
     sections.forEach((section) => {
       gsap.fromTo(section, 
@@ -43,7 +43,6 @@ const App: React.FC = () => {
       );
     });
 
-    // Custom Cursor logic
     if (window.innerWidth > 1024) {
       const cursor = document.createElement('div');
       cursor.className = 'cursor-follower';
@@ -81,6 +80,7 @@ const App: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen selection:bg-[#16D12E] selection:text-white dark:bg-[#050505] transition-colors duration-500">
+      <MarketTicker />
       <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
       <main className="flex-grow">
         <Hero isDarkMode={isDarkMode} />
@@ -90,7 +90,6 @@ const App: React.FC = () => {
         <Leadership />
         <PortfolioStructure />
         
-        {/* Closing Section Refined */}
         <section className="py-24 lg:py-40 bg-white dark:bg-[#050505] border-t border-[#e9eaeb] dark:border-[#1a1a1a]">
           <div className="max-w-[1440px] mx-auto px-6">
             <div className="bg-[#fafafa] dark:bg-[#0d0d0d] border border-[#e9eaeb] dark:border-[#1a1a1a] p-10 lg:p-20 text-center relative group overflow-hidden transition-all duration-700 hover:bg-[#111111] dark:hover:bg-white hover:shadow-2xl">
