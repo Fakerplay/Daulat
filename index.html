@@ -26,6 +26,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
       body {
         font-family: 'Inter', sans-serif;
@@ -48,8 +49,7 @@
         z-index: -1;
       }
 
-      /* FIXED selector */
-      html.dark body::before {
+      .dark body::before {
         background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), 
                           linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
       }
@@ -59,9 +59,18 @@
         color: #ffffff;
       }
 
-      .heading-h1 { line-height: 1.05; letter-spacing: -0.02em; }
-      .heading-h2 { letter-spacing: -0.01em; }
-      .number-tracking { letter-spacing: -0.01em; }
+      .heading-h1 {
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+      }
+
+      .heading-h2 {
+        letter-spacing: -0.01em;
+      }
+
+      .number-tracking {
+        letter-spacing: -0.01em;
+      }
 
       .cursor-follower {
         position: fixed;
@@ -85,9 +94,7 @@
         background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.01) 50.1%);
         background-size: 100% 4px;
         pointer-events: none;
-
-        /* 🔥 KEY FIX */
-        z-index: -1;
+        z-index: 1000;
         opacity: 0.5;
       }
 
@@ -95,7 +102,9 @@
         background: linear-gradient(to bottom, transparent 50%, rgba(255, 255, 255, 0.005) 50.1%);
       }
 
-      html { scroll-behavior: smooth; }
+      html {
+        scroll-behavior: smooth;
+      }
     </style>
 
     <script type="importmap">
@@ -111,8 +120,26 @@
 }
 </script>
 </head>
-  <body>
-    <div class="fintech-scanline"></div>
-    <div id="root"></div>
-  </body>
+
+<body>
+  <div class="fintech-scanline"></div>
+  <div id="root"></div>
+
+  <!-- FIX: React mount (required for Vercel) -->
+  <script type="module">
+    import React from "react";
+    import { createRoot } from "react-dom/client";
+
+    function App() {
+      return React.createElement(
+        "div",
+        { className: "min-h-screen flex items-center justify-center text-2xl font-semibold" },
+        "Daulat Wealth Management"
+      );
+    }
+
+    const root = createRoot(document.getElementById("root"));
+    root.render(React.createElement(App));
+  </script>
+</body>
 </html>
